@@ -1,53 +1,18 @@
 import {createSlice} from '@reduxjs/toolkit';
 import {THUNK_STATUS} from '../constants';
-import {getUsersAsyncThunk, postAsyncThunk} from '../asyncThunk/authAsyncThunk';
+import {
+  getFriendsAsyncThunk,
+  getProfileInfoAsyncThunk,
+  getUsersAsyncThunk,
+  getpostAsyncThunk,
+  postAsyncThunk,
+} from '../asyncThunk/authAsyncThunk';
 
 const initialState = {
-  person: {
-    name: 'Rajat Singh',
-    email: 'rajat@gmail.com',
-    address: 'Nandurbar,Maharashtra',
-    mobile: '1234567890',
-    country: 'India',
-    img: 'https://t3.ftcdn.net/jpg/02/99/04/20/360_F_299042079_vGBD7wIlSeNl7vOevWHiL93G4koMM967.jpg',
-  },
-  userPost: [
-    {
-      imgData: 'https://api.slingacademy.com/public/sample-photos/22.jpeg',
-      title: 'Dimple',
-      post: '',
-    },
-    {
-      imgData: 'https://api.slingacademy.com/public/sample-photos/23.jpeg',
-      title: 'Simple',
-      post: '',
-    },
-    {
-      imgData: 'https://api.slingacademy.com/public/sample-photos/24.jpeg',
-      title: 'Bahar Gaon',
-      post: '',
-    },
-    {
-      imgData: 'https://api.slingacademy.com/public/sample-photos/25.jpeg',
-      title: 'Videsh',
-      post: '',
-    },
-    {
-      imgData: 'https://api.slingacademy.com/public/sample-photos/26.jpeg',
-      title: '',
-      post: '',
-    },
-    {
-      imgData: 'https://api.slingacademy.com/public/sample-photos/27.jpeg',
-      title: 'Nepal',
-      post: '',
-    },
-    {
-      imgData: 'https://api.slingacademy.com/public/sample-photos/28.jpeg',
-      title: 'China',
-      post: '',
-    },
-  ],
+  profile: {},
+  logger: {},
+  profilePosts: [],
+  userPost: [],
   user: [],
   followers: [],
   following: [],
@@ -86,35 +51,82 @@ const authSlice = createSlice({
       state.followers = newFollow;
       state.following = followings;
     },
+    unfollow: (state, action) => {
+      const personId = action.payload.id;
+      const person = state.following.filter(item => item.id === personId);
+      person[0].follower = true;
+      person[0].following = false;
+      const follower = [...state.followers, ...person];
+      const newFollowings = state.following.filter(item => item.id != personId);
+      state.followers = follower;
+      state.following = newFollowings;
+    },
     editprofile: (state, action) => {
       const person = action.payload;
-      state.person = person;
+      const logger = state.logger;
+      const payload = {location: {}};
+      payload.firstName = person.name;
+
+      payload.email = person.email;
+      payload.location.street = person.address;
+
+      payload.phone = person.phone;
+      payload.location.country = person.country;
+      payload.picture = person.image;
+      const j = {...state.logger, ...payload};
+      state.logger = j;
+      debugger;
     },
     addUserPost: (state, action) => {
       const newpost = action.payload;
-      const posts = [...state.userPost, newpost];
-      state.userPost = posts;
+      const payload = {image: '', owner: {}};
+      payload.image = newpost.imgData;
+      payload.text = newpost.title;
+      payload['owner'].firstName = state.logger.firstName;
+      payload['owner'].id = state.logger.id;
+      payload['owner'].lastName = state.logger.lastName;
+      payload['owner'].picture = state.logger.picture;
+      payload['owner'].title = state.logger.title;
+      const posts = [...state.userPost, payload];
+
+      const newSort = posts.reverse();
+      state.userPost = newSort;
     },
   },
   extraReducers: builder => {
     builder.addCase(getUsersAsyncThunk.fulfilled, (state, action) => {
-      const result = [];
+      state.profilePosts = action.payload.data.data;
+    });
+
+    builder.addCase(getpostAsyncThunk.fulfilled, (state, action) => {
+      state.userPost = action.payload.data.data;
+    });
+    builder.addCase(getProfileInfoAsyncThunk.fulfilled, (state, action) => {
+      const data = action.payload.data;
+      state.profile = action.payload.data;
+      //debugger
+      if (
+        action.payload.data.id === '60d0fe4f5311236168a10a03' &&
+        !state.logger
+      ) {
+        state.logger = action.payload.data;
+      }
+    });
+
+    builder.addCase(getFriendsAsyncThunk.fulfilled, (state, action) => {
+      //state.userPost = action.payload.data.data;
+
       const followers = [];
       const following = [];
-      for (let i = 0; i < action.payload.data.length; i++) {
-        if (i < 4) {
-          const item = action.payload.data[i];
-          item.img = `https://api.slingacademy.com/public/sample-photos/${
-            i + 1
-          }.jpeg`;
+      for (let i = 0; i < action.payload.data.data.length; i++) {
+        if (i < 15) {
+          const item = action.payload.data.data[i];
+
           item.follower = true;
           item.following = false;
           followers.push(item);
         } else {
-          const item = action.payload.data[i];
-          item.img = `https://api.slingacademy.com/public/sample-photos/${
-            i + 1
-          }.jpeg`;
+          const item = action.payload.data.data[i];
 
           item.follower = false;
           item.following = true;
@@ -126,8 +138,9 @@ const authSlice = createSlice({
     });
   },
 });
-
-export const {addToken, follow, editprofile, addUserPost} = authSlice.actions;
+//
+export const {addToken, follow, editprofile, unfollow, addUserPost} =
+  authSlice.actions;
 export const authStatusSelector = state => state.auth.authStatus;
 
 export default authSlice.reducer;

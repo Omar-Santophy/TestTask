@@ -12,6 +12,7 @@ export const postData = [
     name: 'lorem ipsum',
     comment: 'lorem ipsum is demo data',
     image: images.nature,
+    
   },
   {
     id: '3',

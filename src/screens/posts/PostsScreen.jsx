@@ -1,5 +1,5 @@
-import {View, Image, TouchableOpacity, Alert} from 'react-native';
-import React, {useState} from 'react';
+import {View, Image, TouchableOpacity, Alert, Platform} from 'react-native';
+import React, {useEffect, useState} from 'react';
 import {styles} from './styles';
 import colors from '../../constants/colors';
 import InputText from '../../components/input/input';
@@ -8,12 +8,15 @@ import ImagePicker from 'react-native-image-crop-picker';
 import {androidCameraPermission} from '../../../permissions';
 import routes from '../../constants/routes';
 import {useNavigation} from '@react-navigation/native';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {addUserPost} from '../../redux/slices/auth.slices';
+import {
+  getProfileInfoAsyncThunk,
+  getUsersAsyncThunk,
+} from '../../redux/asyncThunk/authAsyncThunk';
 
 const PostsScreen = () => {
   const [title, setTitle] = useState('');
-  const [post, setPost] = useState('');
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const [selectedImage, setSelectedImage] = useState('');
@@ -27,13 +30,16 @@ const PostsScreen = () => {
       ]);
     }
   };
+  useEffect(() => {
+    dispatch(getProfileInfoAsyncThunk({id: '60d0fe4f5311236168a10a03'}));
+    dispatch(getUsersAsyncThunk({id: '60d0fe4f5311236168a10a03'}));
+  }, []);
   const onSubmit = () => {
     const payload = {};
     payload.imgData = selectedImage;
     payload.title = title;
-    payload.post = post;
     dispatch(addUserPost(payload));
-    navigation.navigate(routes.PROFILE_SCREEN);
+    navigation.navigate(routes.HOME_SCREEN);
   };
   const onCamera = () => {
     ImagePicker.openCamera({
@@ -58,35 +64,17 @@ const PostsScreen = () => {
   };
 
   return (
-    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-      <View
-        style={{
-          marginVertical: 20,
-          width: '100%',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
+    <View style={styles.postContainer}>
+      <View style={styles.imageContainer}>
         <TouchableOpacity
           onPress={() => onSelectImage()}
-          style={{
-            marginBottom: 40,
-            height: 200,
-            backgroundColor: colors.color6,
-            justifyContent: 'center',
-            alignItems: 'center',
-            width: '90%',
-          }}>
-          <View>
-            <Image
-              style={{width: 200, height: 200}}
-              source={{uri: selectedImage}}
-            />
-          </View>
+          style={styles.btnImageStyle}>
+          <Image style={styles.imageStyle} source={{uri: selectedImage}} />
         </TouchableOpacity>
         <InputText
           mode="outlined"
-          label="Title"
-          placeholder="Please Enter Title"
+          label="Caption"
+          placeholder="Please Enter Caption"
           outlineStyle={styles.outLineStyles}
           underlineStyle={styles.underLineStyle}
           outlineColor={colors.BLACK}
@@ -99,34 +87,11 @@ const PostsScreen = () => {
           onChangeText={e => setTitle(e)}
         />
       </View>
-      <View
-        style={{
-          marginVertical: 20,
-          width: '100%',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
-        <InputText
-          mode="outlined"
-          label="Post"
-          placeholder="Please Enter Post"
-          outlineStyle={styles.outLineStyles}
-          underlineStyle={styles.underLineStyle}
-          outlineColor={colors.BLACK}
-          activeOutlineColor={colors.BLACK}
-          textColor={colors.BLACK}
-          contentStyle={styles.textInput}
-          style={styles.inputField}
-          value={post}
-          autoCapitalize={'none'}
-          onChangeText={e => setPost(e)}
-        />
-      </View>
 
-      <View style={{width: '100%'}}>
+      <View style={styles.btnContainer}>
         <AppButton
           onPress={() => onSubmit()}
-          btnStyle={{width: '100%', height: 40}}
+          btnStyle={styles.btnPost}
           btnText="Post"
         />
       </View>

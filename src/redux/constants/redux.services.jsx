@@ -1,7 +1,9 @@
 //  Async Routes
 export const SERVICE_ROUTES = {
-  POSTS: 'posts/:id',
-  GETUSERS: 'https://jsonplaceholder.typicode.com/users',
+  POSTS: 'post?limit=10',
+  GETUSER: 'user/:id',
+  getUserProfile:"user/:id/post?limit=10",
+  getFriends:"user?limit=30"
 };
 
 // Thunk Status

@@ -1,7 +1,9 @@
 // Service Routes
 export const ASYNC_ROUTES = {
   POSTS: 'Posts',
-  GETUSERS: 'get-users',
+  GETUSER: 'get-user',
+  GetUserProfile: 'get-user-info',
+  getFriends:"get-friends"
 };
 
 //  Methods

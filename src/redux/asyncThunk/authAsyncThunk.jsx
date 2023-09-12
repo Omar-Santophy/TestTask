@@ -1,13 +1,18 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import {ASYNC_ROUTES} from '../constants';
-import {getUserServices, postServices} from '../services/authServices';
+import {
+  getFriendsServices,
+  getProfileServices,
+  getUserServices,
+  getpostServices,
+} from '../services/authServices';
 
-export const postAsyncThunk = createAsyncThunk(
+export const getpostAsyncThunk = createAsyncThunk(
   ASYNC_ROUTES.POSTS,
   async (payload, {rejectWithValue}) => {
     console.log(payload, '...payload from signUp');
     try {
-      const response = await postServices(payload);
+      const response = await getpostServices(payload);
       return response;
     } catch (error) {
       return rejectWithValue;
@@ -16,7 +21,7 @@ export const postAsyncThunk = createAsyncThunk(
 );
 
 export const getUsersAsyncThunk = createAsyncThunk(
-  ASYNC_ROUTES.GETUSERS,
+  ASYNC_ROUTES.GetUserProfile,
   async (payload, {rejectWithValue}) => {
     console.log(payload, '...payload from signUp');
     try {
@@ -27,3 +32,29 @@ export const getUsersAsyncThunk = createAsyncThunk(
     }
   },
 );
+export const getProfileInfoAsyncThunk = createAsyncThunk(
+  ASYNC_ROUTES.GETUSER,
+  async (payload, {rejectWithValue}) => {
+    console.log(payload, '...payload from signUp');
+    try {
+      const response = await getProfileServices(payload);
+      return response;
+    } catch (error) {
+      return rejectWithValue;
+    }
+  },
+);
+export const getFriendsAsyncThunk = createAsyncThunk(
+  ASYNC_ROUTES.getFriends,
+  async (payload, {rejectWithValue}) => {
+    console.log(payload, '...payload from signUp');
+    try {
+      const response = await getFriendsServices(payload);
+
+      return response;
+    } catch (error) {
+      return rejectWithValue;
+    }
+  },
+);
+//getFriendsServices
