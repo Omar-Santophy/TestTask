@@ -5,14 +5,20 @@ import routes from '../../constants/routes';
 import Followings from '../followings/Followings';
 import {Dimensions} from 'react-native';
 import {useDispatch} from 'react-redux';
-import {getUsersAsyncThunk} from '../../redux/asyncThunk/authAsyncThunk';
+import {
+  getFriendsAsyncThunk,
+  getProfileInfoAsyncThunk,
+  getUsersAsyncThunk,
+} from '../../redux/asyncThunk/authAsyncThunk';
 
 const Tab = createMaterialTopTabNavigator();
 
 export default function FriendsListsScreen() {
   const dispatch = useDispatch();
   React.useEffect(() => {
-    dispatch(getUsersAsyncThunk());
+    dispatch(getFriendsAsyncThunk());
+    dispatch(getProfileInfoAsyncThunk({id: '60d0fe4f5311236168a10a03'}));
+    dispatch(getUsersAsyncThunk({id: '60d0fe4f5311236168a10a03'}));
   }, []);
 
   return (

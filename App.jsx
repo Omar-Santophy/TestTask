@@ -7,8 +7,9 @@ import {PersistGate} from 'redux-persist/integration/react';
 import {persistor, store} from './src/redux/store';
 
 const App = () => {
-  const baseurl = 'http://localhost:3000/';
+  const baseurl = 'https://dummyapi.io/data/v1/';
   axios.defaults.baseURL = baseurl;
+  axios.defaults.headers["app-id"]="650039280d712c5e17998c8d"
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>

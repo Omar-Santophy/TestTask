@@ -1,17 +1,26 @@
 import React from 'react';
-import {StyleSheet} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import Feather from 'react-native-vector-icons/Feather';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import routes from '../constants/routes';
 import colors from '../constants/colors';
-import {HomeScreen, PostsScreen, ProfileScreen} from '../screens';
-import FirendsListScreen from '../screens/friendsList/FirendsListScreen';
+import {
+  EditProfile,
+  FriendsListsScreen,
+  HomeScreen,
+  PostsScreen,
+  ProfileScreen,
+} from '../screens';
+import {useNavigation} from '@react-navigation/native';
 const Tab = createBottomTabNavigator();
 
-const BottomNavigation = ({focused}) => {
+const BottomNavigation = () => {
+  const navigation = useNavigation();
   return (
     <Tab.Navigator
+      screenOptions={{headerShown: false}}
       initialRouteName="Home"
       tabBarOptions={{
         showLabel: false,
@@ -23,50 +32,45 @@ const BottomNavigation = ({focused}) => {
         name={routes.HOME_SCREEN}
         component={HomeScreen}
         options={{
-          tabBarIcon: ({focused}) => (
-            <Ionicons
-              name={focused ? 'home' : 'home-outline'}
-              size={25}
-              color={focused ? colors.BLACK : colors.BLACK}
-            />
+          tabBarIcon: () => (
+            <Ionicons name={'home'} size={25} color={colors.BLACK} />
           ),
         }}
       />
+
       <Tab.Screen
         name={routes.POSTS_SCREEN}
         component={PostsScreen}
         options={{
-          tabBarIcon: ({focused}) => (
-            <Ionicons
-              name={focused ? 'search-sharp' : 'search-outline'}
-              size={25}
-              color={focused ? colors.BLACK : colors.BLACK}
-            />
+          tabBarIcon: () => (
+            <AntDesign name={'plussquare'} size={25} color={colors.BLACK} />
           ),
         }}
       />
+
       <Tab.Screen
-        name={routes.PROFILE}
+        name={routes.PROFILE_SCREEN}
         component={ProfileScreen}
         options={{
           tabBarIcon: () => (
-            <Feather
-              name={focused ? 'plus' : 'plus'}
+            <FontAwesome
+              name={'user-circle-o'}
               size={25}
-              color={colors.WHITE}
+              color={colors.BLACK}
             />
           ),
         }}
       />
+
       <Tab.Screen
         name={routes.FRIENDS_LIST_SCREEN}
-        component={FirendsListScreen}
+        component={FriendsListsScreen}
         options={{
           tabBarIcon: () => (
-            <Feather
-              name={focused ? 'plus' : 'plus'}
-              size={25}
-              color={colors.WHITE}
+            <FontAwesome5
+              name={'user-friends'}
+              size={22}
+              color={colors.BLACK}
             />
           ),
         }}
@@ -76,27 +80,3 @@ const BottomNavigation = ({focused}) => {
 };
 
 export default BottomNavigation;
-
-const styles = StyleSheet.create({
-  button: {
-    top: -30,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  buttonView: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    backgroundColor: colors.BLACK,
-  },
-  shadow: {
-    shadowColor: colors.BLACK,
-    shadowOffset: {
-      width: 0,
-      height: 7.5,
-    },
-    shadowOpacity: 0.5,
-    shadowRadius: 3.5,
-    elevation: 5,
-  },
-});

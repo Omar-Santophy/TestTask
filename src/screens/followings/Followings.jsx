@@ -1,60 +1,54 @@
-import {View, Text, FlatList, Image} from 'react-native';
+import {FlatList, View, Text, Image, TouchableOpacity} from 'react-native';
 import React from 'react';
+import {useDispatch, useSelector} from 'react-redux';
+
+import styles from '../../screens/followings/styles';
 import AppButton from '../../components/button/AppButton';
-import {useNavigation} from '@react-navigation/native';
-import colors from '../../constants/colors';
-import {useSelector} from 'react-redux';
+import {unfollow} from '../../redux/slices/auth.slices';
 import routes from '../../constants/routes';
+import {useNavigation} from '@react-navigation/native';
 
 const Followings = () => {
-  const navigation = useNavigation();
   const {following} = useSelector(state => state.auth);
-   return (
-    <View>
-      <FlatList
-        data={following}
-        renderItem={({item, index}) => {
-          return (
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                width: '100%',
-                alignItems: 'center',
-              }}>
-              <Image
-                source={{uri: item.img}}
-                style={{
-                  width: 60,
-                  height: 60,
-                  borderRadius: 30,
-                  marginVertical: 10,
-                  marginStart: 20,
+  const dispatch = useDispatch();
+  const navigation = useNavigation();
+  return (
+    <FlatList
+      data={following}
+      renderItem={({item}) => {
+        return (
+          <View style={styles.followingContainer}>
+            <Image source={{uri: item.picture}} style={styles.userImage} />
+            <View>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate(routes.PROFILE_SCREEN, {
+                    id: item.id,
+                  });
                 }}
-              />
-              <View>
-                <Text style={{fontWeight: 'bold', color: colors.BLACK}}>
-                  {item.name}
+                style={styles.titleName}>
+                <Text style={styles.titleName}>
+                  {item?.title.toUpperCase() +
+                    '.' +
+                    ' ' +
+                    item?.firstName +
+                    ' ' +
+                    item?.lastName}
                 </Text>
-                <Text style={{fontWeight: 'bold', color: colors.GREY}}>
-                  {item.email}
-                </Text>
-              </View>
-              <AppButton
-                // onPress={() => navigation.navigate(routes.POSTS_SCREEN)}
-                btnStyle={{
-                  width: 100,
-                  height: 40,
-                  backgroundColor: colors.BLACK,
-                }}
-                btnTextStyle={{color: colors.WHITE}}
-                btnText={item.follower ? 'Follow' : 'Following'}
-              />
+              </TouchableOpacity>
             </View>
-          );
-        }}
-      />
-    </View>
+            <AppButton
+              onPress={() => {
+                dispatch(unfollow({id: item.id}));
+              }}
+              btnStyle={styles.btnStyle}
+              btnTextStyle={styles.btnTextStyle}
+              btnText="Unfollow"
+            />
+          </View>
+        );
+      }}
+    />
   );
 };
 

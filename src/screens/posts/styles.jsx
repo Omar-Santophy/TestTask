@@ -1,5 +1,10 @@
 import {StyleSheet} from 'react-native';
 import colors from '../../constants/colors';
+import {
+  moderateScale,
+  moderateVerticalScale,
+  scale,
+} from 'react-native-size-matters';
 
 export const styles = StyleSheet.create({
   container: {
@@ -7,19 +12,19 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   profileContainer: {
-    marginTop: 20,
+    marginTop: moderateVerticalScale(20),
     justifyContent: 'center',
     alignItems: 'center',
   },
   user_name: {
     textAlign: 'center',
-    fontSize: 16,
+    fontSize: scale(16),
     marginTop: 10.8,
   },
   ImageStyle: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
+    width: moderateScale(100),
+    height: moderateScale(100),
+    borderRadius: moderateScale(50),
   },
   modalImage: {
     position: 'absolute',
@@ -27,34 +32,34 @@ export const styles = StyleSheet.create({
     right: 0,
   },
   IconStyle: {
-    height: 30,
-    width: 30,
+    height: moderateScale(30),
+    width: moderateScale(30),
     position: 'absolute',
     bottom: 0,
-    left: 12,
+    left: moderateScale(12),
   },
   errorStyle: {
-    fontSize: 10,
+    fontSize: scale(10),
     color: 'red',
-    marginTop: 5,
+    marginTop: moderateVerticalScale(5),
   },
 
   inputContainer: {
-    marginHorizontal: 10,
-    marginTop: 51.55,
+    marginHorizontal: moderateScale(10),
+    marginTop: moderateVerticalScale(51.55),
   },
   marginStyle: {
     width: '90%',
-    marginVertical: 10,
+    marginVertical: moderateVerticalScale(10),
   },
   inputLabel: {
-    fontSize: 12,
+    fontSize: scale(12),
   },
 
   //==============Button Styled==========================
   BtnContainer: {
     alignItems: 'center',
-    marginTop: 49,
+    marginTop: moderateVerticalScale(49),
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -63,22 +68,50 @@ export const styles = StyleSheet.create({
   },
   //===============INPUT FIELD STYLE=====================
   inputField: {
-    fontSize: 14,
+    fontSize: scale(14),
     color: colors.BLACK,
     backgroundColor: colors.WHITE,
     width: '90%',
   },
   outLineStyles: {
-    borderRadius: 8,
+    borderRadius: moderateScale(8),
     borderWidth: 0.5,
     borderColor: colors.BLACK,
   },
   underLineStyle: {
-    borderRadius: 8,
+    borderRadius: moderateScale(8),
     borderWidth: 0.5,
   },
   textInput: {
     color: colors.BLACK,
-    fontSize: 10,
+    fontSize: scale(10),
   },
+  btnPost: {width: '100%', height: moderateScale(40)},
+  btnContainer: {width: '100%'},
+  inputFieldStyle: {
+    marginVertical: moderateVerticalScale(20),
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  postContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  imageContainer: {
+    marginVertical: moderateVerticalScale(20),
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  btnImageStyle: {
+    marginBottom: moderateVerticalScale(20),
+    height: moderateScale(200),
+    backgroundColor: colors.color6,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '90%',
+  },
+  imageStyle: {width: moderateScale(200), height: moderateScale(200)},
 });

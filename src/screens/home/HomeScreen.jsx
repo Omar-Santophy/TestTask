@@ -1,42 +1,25 @@
-import {View, Text, FlatList, Image} from 'react-native';
-import React from 'react';
-import colors from '../../constants/colors';
-import {useNavigation} from '@react-navigation/native';
-import AppButton from '../../components/button/AppButton';
-import routes from '../../constants/routes';
+import {View, FlatList} from 'react-native';
+import React, {useEffect} from 'react';
+import {postData} from '../../constants/listData';
+import ItemPosts from '../../components/lists/ItemPosts';
+import {useDispatch, useSelector} from 'react-redux';
+import {getProfileInfoAsyncThunk, getUsersAsyncThunk, getpostAsyncThunk} from '../../redux/asyncThunk/authAsyncThunk';
 
 const HomeScreen = () => {
-  const navigation = useNavigation();
+  const {userPost} = useSelector(state => state?.auth);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getpostAsyncThunk());
+    dispatch(getProfileInfoAsyncThunk({id: '60d0fe4f5311236168a10a03'}));
+
+    dispatch(getUsersAsyncThunk({id: '60d0fe4f5311236168a10a03'}));
+  }, []);
+
   return (
-    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-      <View style={{width: '90%'}}>
-        <AppButton
-          onPress={() => {
-            navigation.navigate(routes.POSTS_SCREEN);
-          }}
-          color={colors.MAROON}
-          btnText={'Post'}
-        />
-      </View>
-      <View style={{width: '90%'}}>
-        <AppButton
-          onPress={() => {
-            navigation.navigate(routes.PROFILE_SCREEN);
-          }}
-          color={colors.MAROON}
-          btnText={'Profile'}
-        />
-      </View>
-      <View style={{width: '90%'}}>
-        <AppButton
-          onPress={() => {
-            navigation.navigate(routes.FRIENDS_LIST_SCREEN);
-          }}
-          color={colors.MAROON}
-          btnText={'Friends List'}
-        />
-      </View>
-    </View>
+    <FlatList
+      data={userPost}
+      renderItem={({item}) => <ItemPosts item={item} />}
+    />
   );
 };
 

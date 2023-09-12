@@ -13,26 +13,28 @@ import ImagePicker from 'react-native-image-crop-picker';
 import {androidCameraPermission} from '../../../permissions';
 
 const EditProfile = () => {
-  const {person} = useSelector(state => state?.auth);
+  const {profile, person} = useSelector(state => state?.auth);
   const navigation = useNavigation();
-  const [name, setName] = useState(person?.name);
-  const [email, setEmail] = useState(person?.email);
-  const [address, setAddress] = useState(person?.address);
-  const [mobile, setMobile] = useState(person?.mobile);
-  const [country, setCountry] = useState(person?.country);
+  const [name, setName] = useState(profile?.firstName);
+  const [email, setEmail] = useState(profile?.email);
+  const [address, setAddress] = useState(profile?.location?.street);
+  const [phone, setPhone] = useState(profile?.phone);
+  const [country, setCountry] = useState(profile?.location?.country);
   const dispatch = useDispatch();
-  const [selectedImage, setSelectedImage] = useState(person?.image);
+  const [selectedImage, setSelectedImage] = useState(profile?.picture);
+
   const onSubmithandler = e => {
     const payload = {};
     payload.name = name;
     payload.email = email;
     payload.address = address;
-    payload.mobile = mobile;
+    payload.phone = phone;
     payload.country = country;
     payload.image = selectedImage;
     dispatch(editprofile(payload));
     navigation.navigate(routes.PROFILE_SCREEN);
   };
+
   const onSelectImage = async () => {
     const permissionStatus = await androidCameraPermission();
     if (permissionStatus || Platform.OS === 'ios') {
@@ -67,41 +69,18 @@ const EditProfile = () => {
 
   return (
     <View>
-      <View
-        style={{marginTop: 30, justifyContent: 'center', alignItems: 'center'}}>
-        <Image
-          source={{uri: selectedImage}}
-          style={{
-            width: 120,
-            height: 120,
-            borderRadius: 60,
-            borderColor: colors.BLACK,
-            borderWidth: 2,
-          }}
-        />
+      <View style={styles.editContainer}>
+        <Image source={{uri: selectedImage}} style={styles.userImage} />
 
         <TouchableOpacity onPress={() => onSelectImage()}>
           <Image
             resizeMode="center"
             source={images.edit}
-            style={{
-              width: 20,
-              height: 20,
-              borderColor: colors.BLACK,
-              bottom: 50,
-              left: 50,
-              tintColor: colors.BLACK,
-            }}
+            style={styles.editImageStyle}
           />
         </TouchableOpacity>
       </View>
-      <View
-        style={{
-          marginVertical: 20,
-          width: '100%',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
+      <View style={styles.inputFieldStyle}>
         <InputText
           mode="outlined"
           label="Name"
@@ -118,13 +97,7 @@ const EditProfile = () => {
           onChangeText={e => setName(e)}
         />
       </View>
-      <View
-        style={{
-          marginVertical: 20,
-          width: '100%',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
+      <View style={styles.inputFieldStyle}>
         <InputText
           mode="outlined"
           label="Email"
@@ -141,13 +114,7 @@ const EditProfile = () => {
           onChangeText={e => setEmail(e)}
         />
       </View>
-      <View
-        style={{
-          marginVertical: 20,
-          width: '100%',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
+      <View style={styles.inputFieldStyle}>
         <InputText
           mode="outlined"
           label="Mobile"
@@ -159,18 +126,12 @@ const EditProfile = () => {
           textColor={colors.BLACK}
           contentStyle={styles.textInput}
           style={styles.inputField}
-          value={mobile}
+          value={phone}
           autoCapitalize={'none'}
-          onChangeText={e => setMobile(e)}
+          onChangeText={e => setPhone(e)}
         />
       </View>
-      <View
-        style={{
-          marginVertical: 20,
-          width: '100%',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
+      <View style={styles.inputFieldStyle}>
         <InputText
           mode="outlined"
           label="Address"
@@ -187,13 +148,7 @@ const EditProfile = () => {
           onChangeText={e => setAddress(e)}
         />
       </View>
-      <View
-        style={{
-          marginVertical: 20,
-          width: '100%',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
+      <View style={styles.inputFieldStyle}>
         <InputText
           mode="outlined"
           label="Country"
