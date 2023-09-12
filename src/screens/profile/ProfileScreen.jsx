@@ -48,6 +48,7 @@ const ProfileScreen = () => {
   }, [id]);
 
   console.log(profile, 'kkkkk');
+  debugger;
 
   const navigation = useNavigation();
   return (
@@ -58,7 +59,7 @@ const ProfileScreen = () => {
         <View style={styles.bioContainer}>
           {profile.id === '60d0fe4f5311236168a10a03' ? (
             <Text style={styles.bioTitle}>
-              {logger?.title?.toUpperCase() +
+              {logger?.title +
                 '.' +
                 ' ' +
                 logger?.firstName +

@@ -12,6 +12,7 @@ const initialState = {
   profile: {},
   logger: {},
   profilePosts: [],
+  login: false,
   userPost: [],
   user: [],
   followers: [],
@@ -107,8 +108,9 @@ const authSlice = createSlice({
       //debugger
       if (
         action.payload.data.id === '60d0fe4f5311236168a10a03' &&
-        !state.logger
+        !state.login
       ) {
+        state.login = true;
         state.logger = action.payload.data;
       }
     });
